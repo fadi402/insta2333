@@ -15,7 +15,10 @@ overflow:hidden;
 }
 
 /* MATRIX */
-#matrix{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.08;z-index:-2}
+#matrix{
+position:absolute;top:0;left:0;width:100%;height:100%;
+opacity:0.08;z-index:-2
+}
 
 /* LAYOUT */
 .container{
@@ -26,20 +29,24 @@ gap:40px;
 height:100vh;
 }
 
-/* CARD */
+/* CARD (PREMIUM) */
 .card{
 width:420px;
-background:rgba(11,26,21,0.75);
-backdrop-filter:blur(14px);
+background:rgba(11,26,21,0.65);
+backdrop-filter:blur(18px);
 border-radius:18px;
 padding:30px;
-box-shadow:0 0 60px rgba(0,0,0,0.7);
+box-shadow:
+0 0 40px rgba(0,0,0,0.8),
+0 0 25px rgba(76,255,192,0.12);
+animation:fadeIn 1s ease;
 }
 
 /* PHONE */
 .phone{
 width:260px;height:520px;background:#111;
-border-radius:30px;box-shadow:0 0 40px rgba(0,0,0,.8);
+border-radius:30px;
+box-shadow:0 0 40px rgba(0,0,0,.8);
 display:flex;align-items:center;justify-content:center;
 opacity:0;transform:translateY(40px);
 transition:0.8s ease;
@@ -55,22 +62,32 @@ overflow:hidden;
 
 /* PLUS */
 #plus{
-position:absolute;top:50%;left:50%;
+position:absolute;
+top:50%;left:50%;
 transform:translate(-50%,-50%);
-font-size:50px;color:#4cffc0;
-display:none;cursor:pointer;
+font-size:50px;
+color:#4cffc0;
+display:none;
+cursor:pointer;
 }
+
+/* FILE */
 #file{display:none}
 
-/* CROSS BUTTON */
+/* SMALL GREEN CROSS */
 #toggle{
 position:fixed;
-bottom:20px;
-left:20px;
-font-size:22px;
-color:white;
+bottom:16px;
+left:16px;
+font-size:16px;
+color:#4cffc0;
 cursor:pointer;
-opacity:.8;
+opacity:.7;
+transition:0.3s;
+}
+#toggle:hover{
+opacity:1;
+text-shadow:0 0 8px #4cffc0;
 }
 
 /* INPUT */
@@ -80,28 +97,56 @@ border:1px solid rgba(76,255,192,.25);
 background:#050e0b;color:white;
 }
 
-/* BUTTON (LOW ANIMATION) */
+/* BUTTON PREMIUM */
 button{
 width:100%;padding:12px;margin-top:14px;
 border:none;border-radius:12px;
 background:#4cffc0;color:#052019;
 cursor:pointer;
-transition:0.2s;
+transition:0.25s;
 }
-button:hover{transform:scale(1.02)}
-button:active{transform:scale(0.98)}
+button:hover{
+transform:translateY(-1px);
+box-shadow:0 0 12px rgba(76,255,192,0.4);
+}
+button:active{
+transform:scale(0.98);
+}
 
 /* LOG */
-.logbox{margin-top:18px;height:30px;font-family:monospace;opacity:0;transition:0.4s}
-.logbox.show{opacity:1}
+.logbox{
+margin-top:18px;
+height:30px;
+font-family:monospace;
+opacity:0;
+transform:translateY(8px);
+transition:0.4s;
+}
+.logbox.show{
+opacity:1;
+transform:translateY(0);
+}
 
 /* BAR */
-.bar{width:0%;height:3px;background:#4cffc0;margin-top:6px}
+.bar{
+width:0%;
+height:3px;
+background:#4cffc0;
+margin-top:6px;
+transition:0.5s;
+box-shadow:0 0 10px #4cffc0;
+}
 
 /* RESULT */
 .result{display:none;margin-top:15px}
 .row{display:flex;justify-content:space-between;padding:10px 0}
 .value{color:#4cffc0;letter-spacing:2px}
+
+/* ANIMATION */
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
 </style>
 </head>
 
@@ -144,7 +189,8 @@ button:active{transform:scale(0.98)}
 /* MATRIX */
 const canvas=document.getElementById("matrix");
 const ctx=canvas.getContext("2d");
-canvas.width=innerWidth;canvas.height=innerHeight;
+canvas.width=innerWidth;
+canvas.height=innerHeight;
 
 const letters="01",fontSize=14;
 const columns=canvas.width/fontSize;
@@ -185,14 +231,20 @@ else if(cb)cb();
 })();
 }
 
-/* START */
+/* START (FIXED) */
 function start(){
 const user=document.getElementById("user");
 if(!user.value.trim()) return;
 
 i=0;
-document.getElementById("phone").classList.remove("show"); // reset
-run();
+
+const phone=document.getElementById("phone");
+
+/* 🔥 FIX */
+phone.style.display="flex";
+phone.classList.remove("show");
+
+setTimeout(()=>run(),200);
 }
 
 /* RUN */
@@ -205,7 +257,15 @@ log.classList.add("show");
 if(i>=logs.length){
 typeText("> completed",log,()=>{
 document.getElementById("res").style.display="block";
-document.getElementById("phone").classList.add("show");
+
+/* 🔥 FORCE SHOW */
+const phone=document.getElementById("phone");
+phone.style.display="flex";
+
+setTimeout(()=>{
+phone.classList.add("show");
+},100);
+
 });
 return;
 }
@@ -243,14 +303,21 @@ plus.style.display="none";
 reader.readAsDataURL(e.target.files[0]);
 };
 
-/* TOGGLE MOCKUP */
+/* TOGGLE (FIXED) */
 const toggle=document.getElementById("toggle");
 let visible=true;
 
 toggle.onclick=()=>{
 const phone=document.getElementById("phone");
-visible=!visible;
-phone.style.display=visible?"flex":"none";
+
+if(visible){
+phone.style.display="none";
+visible=false;
+}else{
+phone.style.display="flex";
+setTimeout(()=>phone.classList.add("show"),50);
+visible=true;
+}
 };
 
 </script>
