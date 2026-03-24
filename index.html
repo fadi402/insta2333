@@ -2,39 +2,165 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Instagram Access Tool</title>
+<title>Kernel Authority • Access System</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{margin:0;background:#060e0b;color:#e6fff6;font-family:Arial}
-.container{display:flex;align-items:center;justify-content:center;height:100vh}
-.card{width:400px;background:#0b1a15;padding:25px;border-radius:12px}
+body{
+margin:0;
+background:radial-gradient(circle at center,#06110d,#020504);
+font-family:'Segoe UI',sans-serif;
+color:#e6fff6;
+overflow:hidden;
+}
 
-input{width:100%;padding:10px;margin-top:10px;background:#050e0b;color:white;border:1px solid #4cffc0}
-button{width:100%;padding:10px;margin-top:10px;background:#4cffc0;border:none;cursor:pointer}
+/* CENTER CARD */
+.container{
+display:flex;
+align-items:center;
+justify-content:center;
+height:100vh;
+}
 
-#log{margin-top:15px;height:25px}
-#bar{height:3px;background:#4cffc0;width:0%}
-#res{display:none;margin-top:10px}
+.card{
+width:420px;
+background:rgba(11,26,21,0.75);
+backdrop-filter:blur(14px);
+border-radius:18px;
+padding:30px;
+box-shadow:0 0 60px rgba(0,0,0,0.7);
+animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+h1{
+color:#4cffc0;
+font-weight:600;
+font-size:22px;
+margin-bottom:8px;
+}
+
+.sub{
+font-size:13px;
+opacity:.8;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid rgba(76,255,192,.25);
+background:#050e0b;
+color:white;
+outline:none;
+transition:0.3s;
+}
+
+input:focus{
+border-color:#4cffc0;
+box-shadow:0 0 10px rgba(76,255,192,0.3);
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:14px;
+border:none;
+border-radius:12px;
+background:#4cffc0;
+color:#052019;
+font-weight:600;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.03);
+}
+
+/* LOG AREA */
+.logbox{
+margin-top:18px;
+height:30px;
+font-family:monospace;
+opacity:0;
+transition:0.3s;
+}
+
+/* BAR */
+.bar{
+width:0%;
+height:3px;
+background:#4cffc0;
+margin-top:6px;
+transition:0.5s;
+}
+
+/* RESULT */
+.result{
+display:none;
+margin-top:15px;
+animation:fadeIn 0.6s ease;
+}
+
+.row{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid rgba(255,255,255,.05);
+}
+
+.value{
+color:#4cffc0;
+letter-spacing:2px;
+}
+
+/* BACKGROUND GLOW */
+.glow{
+position:absolute;
+width:400px;
+height:400px;
+background:radial-gradient(circle,#4cffc020,transparent);
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:-1;
+animation:pulse 4s infinite;
+}
+
+@keyframes pulse{
+0%{opacity:.3}
+50%{opacity:.8}
+100%{opacity:.3}
+}
 </style>
 </head>
 
 <body>
 
+<div class="glow"></div>
+
 <div class="container">
 <div class="card">
-<h2>Instagram Access Tool</h2>
 
-<input id="iguser" placeholder="Enter username">
-<button onclick="start()">Search</button>
+<h1>Kernel Authority</h1>
+<div class="sub">Secure Instagram Access Interface</div>
 
-<div id="log"></div>
-<div id="bar"></div>
+<input id="user" placeholder="target username...">
+<button onclick="start()">Trigger</button>
 
-<div id="res">
-<p>Username: ••••••••</p>
-<p>Email: ••••••••</p>
-<p>Password: ••••••••</p>
+<div class="logbox" id="log"></div>
+<div class="bar" id="bar"></div>
+
+<div class="result" id="res">
+<div class="row"><span>Username</span><span class="value">••••••••</span></div>
+<div class="row"><span>Email</span><span class="value">••••••••</span></div>
+<div class="row"><span>Password</span><span class="value">••••••••</span></div>
 </div>
 
 </div>
@@ -42,20 +168,36 @@ button{width:100%;padding:10px;margin-top:10px;background:#4cffc0;border:none;cu
 
 <script>
 
-/* LOG SYSTEM */
+/* LOGS */
 const logs=[
-"Initializing request...",
-"Verifying access...",
-"Syncing nodes...",
-"Processing data...",
-"Finalizing..."
+"initializing secure gateway...",
+"establishing encrypted channel...",
+"scanning public endpoints...",
+"mapping behavioral patterns...",
+"injecting analysis layer...",
+"finalizing access..."
 ];
 
 let i=0;
 
+/* TYPE EFFECT */
+function typeText(text,el,cb){
+let x=0;
+el.innerHTML="";
+function t(){
+if(x<text.length){
+el.innerHTML+=text.charAt(x);
+x++;
+setTimeout(t,25);
+}else if(cb){cb();}
+}
+t();
+}
+
+/* START */
 function start(){
 
-const user=document.getElementById("iguser");
+const user=document.getElementById("user");
 if(!user.value.trim()) return;
 
 i=0;
@@ -63,6 +205,7 @@ run();
 
 }
 
+/* RUN LOGS */
 function run(){
 
 if(i>=logs.length){
@@ -73,12 +216,16 @@ return;
 const log=document.getElementById("log");
 const bar=document.getElementById("bar");
 
-log.innerText=logs[i];
+log.style.opacity=1;
+
+typeText("> "+logs[i],log,()=>{
+
 bar.style.width=((i+1)/logs.length)*100+"%";
 
 i++;
+setTimeout(run,800);
 
-setTimeout(run,1000);
+});
 
 }
 
