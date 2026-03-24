@@ -1,108 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Instagram Access Tool</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{margin:0;background:#060e0b;color:#e6fff6;font-family:"Segoe UI",Arial,sans-serif}
-#overlay{position:fixed;inset:0;background:rgba(3,10,8,.97);display:flex;align-items:center;justify-content:center;z-index:9999}
-.overlay-box{max-width:540px;background:#0b1a15;border-radius:16px;padding:32px;box-shadow:0 0 60px rgba(0,0,0,.8)}
-.overlay-box h2{color:#4cffc0;font-weight:600;text-align:center;margin-bottom:12px}
-.typing{font-size:13px;opacity:.9;line-height:1.6;min-height:70px}
-.legal{margin-top:14px;height:90px;overflow:hidden;background:#050e0b;border-radius:10px;padding:10px;font-size:11px;opacity:.75}
-.overlay-box button{margin:22px auto 0;display:block;padding:12px 42px;border:none;border-radius:12px;background:#4cffc0;color:#052019;font-weight:600;cursor:pointer}
-.container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:30px}
-.card{width:100%;max-width:560px;background:#0b1a15;border-radius:16px;padding:30px;box-shadow:0 0 40px rgba(0,0,0,.65)}
-h1{color:#4cffc0;font-weight:600}
-.sub{font-size:13px;opacity:.9;margin-bottom:22px}
-label{font-size:13px;opacity:.9}
-input{width:100%;margin-top:8px;padding:13px 14px;border-radius:10px;border:1px solid rgba(76,255,192,.25);background:#050e0b;color:#e6fff6}
-button{width:100%;margin-top:16px;padding:13px;border:none;border-radius:12px;background:#4cffc0;color:#052019;font-weight:600;cursor:pointer}
-.spinner{width:18px;height:18px;border:3px solid rgba(0,0,0,.25);border-top:3px solid #052019;border-radius:50%;animation:spin 1s linear infinite;display:none}
-@keyframes spin{to{transform:rotate(360deg)}}
-.wait,.status,.indicator,.logs,.result{display:none}
-.wait{text-align:center;margin-top:14px;font-size:13px}
-.status{text-align:center;margin-top:10px;font-size:12px;color:#7dffd3}
-.indicator{text-align:center;font-size:11px;opacity:.7}
-.logs{margin-top:18px;background:#050e0b;border-radius:10px;padding:12px;font-size:12px;font-family:monospace}
-.row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}
-.value{letter-spacing:2px;color:#4cffc0}
-.kernel{text-align:center;margin-top:22px;font-size:11px;opacity:.75;color:#8fffd9}
-.feedback-box{position:fixed;right:24px;bottom:120px;width:270px;background:#0b1a15;border-radius:14px;padding:14px;box-shadow:0 0 35px rgba(0,0,0,.6)}
-.feedback-box h4{margin:0 0 10px;font-size:13px;color:#4cffc0}
-.fb-user{color:#8fffd9;font-weight:600;font-size:12px}
-.fb-text{font-size:12px;opacity:.85;margin-top:4px}
-.hurdle{display:none;position:fixed;inset:0;background:rgba(3,10,8,.98);z-index:9998;align-items:center;justify-content:center}
-.hurdle-box{width:100%;max-width:520px;background:#0b1a15;border-radius:16px;padding:28px;box-shadow:0 0 50px rgba(0,0,0,.8)}
-.hurdle-box h3{color:#4cffc0;margin-bottom:10px}
-.hurdle-box p{font-size:13px;opacity:.85;line-height:1.6}
-.hurdle-box input{margin-top:12px;padding:10px;border-radius:10px;width:100%;border:1px solid rgba(76,255,192,.25);background:#050e0b;color:#e6fff6}
-.slider{margin-top:18px;height:10px;background:#050e0b;border-radius:20px;position:relative;cursor:pointer}
-.slider span{position:absolute;left:0;top:0;height:100%;width:0;background:#4cffc0;border-radius:20px}
-.lock{font-size:12px;opacity:.7;margin-top:8px;text-align:center}
-</style>
-</head>
-<body>
-<div id="overlay">
-<div class="overlay-box">
-<h2>Kernel Authority<br>Instagram Access Page</h2>
-<div class="typing" id="typing"></div>
-<div class="legal" id="legal">
-Kernel Authority operates under restricted internal jurisdiction.<br><br>
-Any misuse, replication, redistribution, or exploitation of this interface
-outside approved inspection scope is strictly prohibited.<br><br>
-Violations may result in permanent access suspension, audit logging,
-and authority escalation under internal compliance framework.
-</div>
-<button onclick="enter()">Proceed</button>
-</div>
-</div>
-
-<div class="container">
-<div class="card">
-<h1>Instagram Access Tool</h1>
-<div class="sub">Authorized account inspection interface</div>
-<label>Enter Instagram Username</label>
-<input id="iguser" placeholder="username">
-<button id="btn">
-<div class="spinner" id="sp"></div>
-<span id="btntxt">Search</span>
-</button>
-<div class="wait" id="wait"><span id="loadtxt"></span> • <span id="sec">10</span>s</div>
-<div class="status" id="status">Connection established • Secure channel active</div>
-<div class="indicator" id="indicator">● live inspection in progress</div>
-<div class="logs" id="logs">
-[ kernel ] resolving user node<br>
-[ kernel ] handshake accepted<br>
-[ kernel ] access scope verified
-</div>
-<div class="result" id="res">
-<div class="row"><span>Username</span><span class="value">••••••••</span></div>
-<div class="row"><span>Email</span><span class="value">••••••••</span></div>
-<div class="row"><span>Password</span><span class="value">••••••••</span></div>
-</div>
-<div class="kernel">Powered by internal kernel authority</div>
-</div>
-</div>
-
-<div class="feedback-box">
-<h4>System Feedback</h4>
-<div class="fb-user" id="fbUser"></div>
-<div class="fb-text" id="fbText"></div>
-</div>
-
-<div class="hurdle" id="hurdle">
-  <div class="hurdle-box">
-    <h3 id="hTitle"></h3>
-    <p id="hText"></p>
-    <input id="hInput" placeholder="Access Key">
-    <div class="slider" id="slider"><span></span></div>
-    <div class="lock">Hold to verify system integrity</div>
-    <button id="verifyBtn">Verify</button>
-  </div>
-</div>
-
 <script>
 window.onload = function(){
 
@@ -119,13 +14,9 @@ setInterval(()=>{ legal.scrollTop+=1; if(legal.scrollTop>=legal.scrollHeight) le
 /* Feedback rotate */
 const feedbacks=[
 ["ahmed_munawar","nice webpage hy brother"],
-["legend.65","working hy bhai access mil gya 😯 thanks yr bhot zada"],
-["Arshad45","how it is possible sir 😬"],
-["mr_jutt804","great sir g"],
-["cyber_nova","looks like internal system"],
-["root_master","clean ui authority level"],
-["hashline","next level presentation"],
-["null_axis","professional & controlled"]
+["legend.65","working hy bhai access mil gya 😯 thanks yr"],
+["Arshad45","how it is possible 😬"],
+["mr_jutt804","great sir g"]
 ];
 let f=0;
 const fu=document.getElementById("fbUser");
@@ -137,31 +28,61 @@ f=(f+1)%feedbacks.length;
 }
 rotate(); setInterval(rotate,4000);
 
-/* Overlay enter */
-function enter(){document.getElementById("overlay").style.display="none";}
+/* ENTER FIX */
+window.enter=function(){
+document.getElementById("overlay").style.display="none";
+};
 
-/* Main search logic */
-const btn=document.getElementById("btn"),sp=document.getElementById("sp"),btntxt=document.getElementById("btntxt"),
-wait=document.getElementById("wait"),sec=document.getElementById("sec"),
-loadtxt=document.getElementById("loadtxt"),status=document.getElementById("status"),
-indicator=document.getElementById("indicator"),logs=document.getElementById("logs"),
-res=document.getElementById("res"),iguser=document.getElementById("iguser");
+/* ===== MAIN BUTTON ===== */
+const btn=document.getElementById("btn"),
+sp=document.getElementById("sp"),
+btntxt=document.getElementById("btntxt"),
+wait=document.getElementById("wait"),
+sec=document.getElementById("sec"),
+loadtxt=document.getElementById("loadtxt"),
+status=document.getElementById("status"),
+indicator=document.getElementById("indicator"),
+logs=document.getElementById("logs"),
+res=document.getElementById("res"),
+iguser=document.getElementById("iguser");
+
 const texts=["Initializing request","Verifying access","Syncing nodes"];
+
 btn.onclick=()=>{
-if(!iguser.value.trim())return;
-let t=10;btn.disabled=true;sp.style.display="block";btntxt.textContent="Processing";
-wait.style.display=status.style.display=indicator.style.display=logs.style.display="block";
-res.style.display="none";loadtxt.textContent=texts[0];sec.textContent=t;
+if(!iguser.value.trim()) return;
+
+let t=10;
+btn.disabled=true;
+sp.style.display="block";
+btntxt.textContent="Processing";
+
+wait.style.display="block";
+status.style.display="block";
+indicator.style.display="block";
+logs.style.display="block";
+
+loadtxt.textContent=texts[0];
+sec.textContent=t;
+
 const timer=setInterval(()=>{
-t--;sec.textContent=t;
-if(t===7)loadtxt.textContent=texts[1];
-if(t===4)loadtxt.textContent=texts[2];
-if(t<=0){clearInterval(timer);sp.style.display="none";wait.style.display=indicator.style.display="none";
-res.style.display="block";btntxt.textContent="Completed";btn.disabled=false;}
+t--; sec.textContent=t;
+
+if(t===7) loadtxt.textContent=texts[1];
+if(t===4) loadtxt.textContent=texts[2];
+
+if(t<=0){
+clearInterval(timer);
+sp.style.display="none";
+wait.style.display="none";
+indicator.style.display="none";
+res.style.display="block";
+btntxt.textContent="Completed";
+btn.disabled=false;
+}
 },1000);
 };
 
-/* ===== HURDLE LOGIC ===== */
+/* ===== HURDLE SYSTEM ===== */
 const hurdle=document.getElementById("hurdle"),
 hTitle=document.getElementById("hTitle"),
 hText=document.getElementById("hText"),
@@ -172,138 +93,58 @@ verifyBtn=document.getElementById("verifyBtn");
 iguser.disabled=true;
 
 const steps=[
-["Pre‑Authorization Gate","Enter issued Kernel Access Key","KA-"],
-["Timed Verification","Access window restricted. Proceed.",""],
-["Logic Check","Solve: 8 + 6 × 2 = ?","20"],
-["Compliance Confirmation","Type CONFIRM","CONFIRM"],
-["Rate‑Limit Scan","Cooldown applied. Continue.",""],
-["Integrity Check","Hold slider to complete",""],
-["Re‑Authorization","Re‑enter Kernel Key","KA-"],
-["Clearance Complete","All layers verified",""]
+["Pre-Authorization Gate","Enter Kernel Key","KA-"],
+["Logic Check","Solve: 8 + 6 × 2","20"],
+["Confirmation","Type CONFIRM","CONFIRM"],
+["Integrity Check","Hold slider",""]
 ];
+
 let s=0,hold=0;
 
 function show(){
 hTitle.textContent=steps[s][0];
 hText.textContent=steps[s][1];
-hInput.style.display=steps[s][2]?"block":"none";
 hInput.value="";
-slider.style.width="0";
+hInput.style.display=steps[s][2] ? "block":"none";
+slider.style.width="0%";
+hold=0;
 }
 
 function nextHurdle(){
-if(steps[s][2] && steps[s][2]!="" && <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Verification</title>
-<style>
-#hurdle {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:#000000cc;
-  align-items:center;
-  justify-content:center;
+if(steps[s][2]){
+if(!hInput.value.startsWith(steps[s][2])) return;
 }
-.box {
-  background:#111;
-  padding:20px;
-  color:white;
-  border-radius:10px;
-  text-align:center;
+s++;
+if(s>=steps.length){
+hurdle.style.display="none";
+iguser.disabled=false;
+return;
 }
-.sliderBox {
-  width:200px;
-  height:10px;
-  background:#333;
-  margin:10px auto;
-  cursor:pointer;
-}
-#slider {
-  height:100%;
-  width:0%;
-  background:#0f0;
-}
-</style>
-</head>
-
-<body>
-
-<input id="iguser" placeholder="Enter username" disabled>
-
-<div id="hurdle">
-  <div class="box">
-    <p id="stepText"></p>
-
-    <div class="sliderBox">
-      <div id="slider"></div>
-    </div>
-
-    <button id="verifyBtn">Verify</button>
-  </div>
-</div>
-
-<script>
-let s = 0;
-let hold = 0;
-
-const steps = [
-  ["Step 1", "type", "ok"],
-  ["Step 2", "type", "yes"],
-  ["Step 3", "type", "done"]
-];
-
-const hurdle = document.getElementById("hurdle");
-const slider = document.getElementById("slider");
-const verifyBtn = document.getElementById("verifyBtn");
-const iguser = document.getElementById("iguser");
-const stepText = document.getElementById("stepText");
-
-/* Show step */
-function show(){
-  stepText.innerText = steps[s][0];
-  slider.style.width = "0%";
-  hold = 0;
-}
-
-/* Next step */
-function nextHurdle(){
-  s++;
-  if(s >= steps.length){
-    hurdle.style.display = "none";
-    iguser.disabled = false;
-    return;
-  }
-  show();
-}
-
-/* Slider hold */
-let interval = null;
-
-slider.parentElement.onmousedown = () => {
-  interval = setInterval(() => {
-    hold += 4;
-    slider.style.width = hold + "%";
-
-    if(hold >= 100){
-      clearInterval(interval);
-    }
-  }, 30);
-};
-
-slider.parentElement.onmouseup = () => {
-  clearInterval(interval);
-};
-
-/* Verify button */
-verifyBtn.onclick = nextHurdle;
-
-/* Start */
-hurdle.style.display = "flex";
 show();
-</script>
+}
 
-</body>
-</html>
+/* SLIDER HOLD */
+let interval=null;
+
+slider.parentElement.onmousedown=()=>{
+interval=setInterval(()=>{
+hold+=4;
+slider.style.width=hold+"%";
+if(hold>=100){
+clearInterval(interval);
+nextHurdle();
+}
+},30);
+};
+
+slider.parentElement.onmouseup=()=>clearInterval(interval);
+
+/* VERIFY BUTTON */
+verifyBtn.onclick=nextHurdle;
+
+/* START */
+hurdle.style.display="flex";
+show();
+
+};
+</script>
