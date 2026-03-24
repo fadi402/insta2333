@@ -1,150 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Instagram Access Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{margin:0;background:#060e0b;color:#e6fff6;font-family:Arial}
+.container{display:flex;align-items:center;justify-content:center;height:100vh}
+.card{width:400px;background:#0b1a15;padding:25px;border-radius:12px}
+
+input{width:100%;padding:10px;margin-top:10px;background:#050e0b;color:white;border:1px solid #4cffc0}
+button{width:100%;padding:10px;margin-top:10px;background:#4cffc0;border:none;cursor:pointer}
+
+#log{margin-top:15px;height:25px}
+#bar{height:3px;background:#4cffc0;width:0%}
+#res{display:none;margin-top:10px}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="card">
+<h2>Instagram Access Tool</h2>
+
+<input id="iguser" placeholder="Enter username">
+<button onclick="start()">Search</button>
+
+<div id="log"></div>
+<div id="bar"></div>
+
+<div id="res">
+<p>Username: ••••••••</p>
+<p>Email: ••••••••</p>
+<p>Password: ••••••••</p>
+</div>
+
+</div>
+</div>
+
 <script>
-window.onload = function(){
 
-/* Typing */
-const text="This interface operates under strict internal authority protocols. Kernel Authority is not responsible for misuse or violation beyond inspection scope. Directive issued by Kernel Fadi.";
+/* LOG SYSTEM */
+const logs=[
+"Initializing request...",
+"Verifying access...",
+"Syncing nodes...",
+"Processing data...",
+"Finalizing..."
+];
+
 let i=0;
-const typing=document.getElementById("typing");
-(function type(){ if(i<text.length){ typing.textContent+=text.charAt(i++); setTimeout(type,30);} })();
 
-/* Legal scroll */
-const legal=document.getElementById("legal");
-setInterval(()=>{ legal.scrollTop+=1; if(legal.scrollTop>=legal.scrollHeight) legal.scrollTop=0 },60);
+function start(){
 
-/* Feedback rotate */
-const feedbacks=[
-["ahmed_munawar","nice webpage hy brother"],
-["legend.65","working hy bhai access mil gya 😯 thanks yr"],
-["Arshad45","how it is possible 😬"],
-["mr_jutt804","great sir g"]
-];
-let f=0;
-const fu=document.getElementById("fbUser");
-const ft=document.getElementById("fbText");
-function rotate(){
-fu.textContent="@"+feedbacks[f][0];
-ft.textContent=feedbacks[f][1];
-f=(f+1)%feedbacks.length;
-}
-rotate(); setInterval(rotate,4000);
+const user=document.getElementById("iguser");
+if(!user.value.trim()) return;
 
-/* ENTER FIX */
-window.enter=function(){
-document.getElementById("overlay").style.display="none";
-};
+i=0;
+run();
 
-/* ===== MAIN BUTTON ===== */
-const btn=document.getElementById("btn"),
-sp=document.getElementById("sp"),
-btntxt=document.getElementById("btntxt"),
-wait=document.getElementById("wait"),
-sec=document.getElementById("sec"),
-loadtxt=document.getElementById("loadtxt"),
-status=document.getElementById("status"),
-indicator=document.getElementById("indicator"),
-logs=document.getElementById("logs"),
-res=document.getElementById("res"),
-iguser=document.getElementById("iguser");
-
-const texts=["Initializing request","Verifying access","Syncing nodes"];
-
-btn.onclick=()=>{
-if(!iguser.value.trim()) return;
-
-let t=10;
-btn.disabled=true;
-sp.style.display="block";
-btntxt.textContent="Processing";
-
-wait.style.display="block";
-status.style.display="block";
-indicator.style.display="block";
-logs.style.display="block";
-
-loadtxt.textContent=texts[0];
-sec.textContent=t;
-
-const timer=setInterval(()=>{
-t--; sec.textContent=t;
-
-if(t===7) loadtxt.textContent=texts[1];
-if(t===4) loadtxt.textContent=texts[2];
-
-if(t<=0){
-clearInterval(timer);
-sp.style.display="none";
-wait.style.display="none";
-indicator.style.display="none";
-res.style.display="block";
-btntxt.textContent="Completed";
-btn.disabled=false;
-}
-},1000);
-};
-
-/* ===== HURDLE SYSTEM ===== */
-const hurdle=document.getElementById("hurdle"),
-hTitle=document.getElementById("hTitle"),
-hText=document.getElementById("hText"),
-hInput=document.getElementById("hInput"),
-slider=document.querySelector("#slider span"),
-verifyBtn=document.getElementById("verifyBtn");
-
-iguser.disabled=true;
-
-const steps=[
-["Pre-Authorization Gate","Enter Kernel Key","KA-"],
-["Logic Check","Solve: 8 + 6 × 2","20"],
-["Confirmation","Type CONFIRM","CONFIRM"],
-["Integrity Check","Hold slider",""]
-];
-
-let s=0,hold=0;
-
-function show(){
-hTitle.textContent=steps[s][0];
-hText.textContent=steps[s][1];
-hInput.value="";
-hInput.style.display=steps[s][2] ? "block":"none";
-slider.style.width="0%";
-hold=0;
 }
 
-function nextHurdle(){
-if(steps[s][2]){
-if(!hInput.value.startsWith(steps[s][2])) return;
-}
-s++;
-if(s>=steps.length){
-hurdle.style.display="none";
-iguser.disabled=false;
+function run(){
+
+if(i>=logs.length){
+document.getElementById("res").style.display="block";
 return;
 }
-show();
+
+const log=document.getElementById("log");
+const bar=document.getElementById("bar");
+
+log.innerText=logs[i];
+bar.style.width=((i+1)/logs.length)*100+"%";
+
+i++;
+
+setTimeout(run,1000);
+
 }
 
-/* SLIDER HOLD */
-let interval=null;
-
-slider.parentElement.onmousedown=()=>{
-interval=setInterval(()=>{
-hold+=4;
-slider.style.width=hold+"%";
-if(hold>=100){
-clearInterval(interval);
-nextHurdle();
-}
-},30);
-};
-
-slider.parentElement.onmouseup=()=>clearInterval(interval);
-
-/* VERIFY BUTTON */
-verifyBtn.onclick=nextHurdle;
-
-/* START */
-hurdle.style.display="flex";
-show();
-
-};
 </script>
+
+</body>
+</html>
