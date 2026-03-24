@@ -29,7 +29,7 @@ gap:40px;
 height:100vh;
 }
 
-/* CARD (PREMIUM) */
+/* CARD */
 .card{
 width:420px;
 background:rgba(11,26,21,0.65);
@@ -58,6 +58,17 @@ position:relative;
 width:90%;height:90%;
 background:white;border-radius:20px;
 overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* VIDEO */
+.screen video{
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:20px;
 }
 
 /* PLUS */
@@ -69,12 +80,13 @@ font-size:50px;
 color:#4cffc0;
 display:none;
 cursor:pointer;
+z-index:2;
 }
 
 /* FILE */
 #file{display:none}
 
-/* SMALL GREEN CROSS */
+/* CROSS */
 #toggle{
 position:fixed;
 bottom:16px;
@@ -97,7 +109,7 @@ border:1px solid rgba(76,255,192,.25);
 background:#050e0b;color:white;
 }
 
-/* BUTTON PREMIUM */
+/* BUTTON */
 button{
 width:100%;padding:12px;margin-top:14px;
 border:none;border-radius:12px;
@@ -142,7 +154,7 @@ box-shadow:0 0 10px #4cffc0;
 .row{display:flex;justify-content:space-between;padding:10px 0}
 .value{color:#4cffc0;letter-spacing:2px}
 
-/* ANIMATION */
+/* ANIM */
 @keyframes fadeIn{
 from{opacity:0;transform:translateY(20px)}
 to{opacity:1;transform:translateY(0)}
@@ -176,7 +188,7 @@ to{opacity:1;transform:translateY(0)}
 <div class="phone" id="phone">
 <div class="screen" id="screen">
 <div id="plus">+</div>
-<input type="file" id="file" accept="image/*">
+<input type="file" id="file" accept="image/*,video/*">
 </div>
 </div>
 
@@ -231,16 +243,13 @@ else if(cb)cb();
 })();
 }
 
-/* START (FIXED) */
+/* START */
 function start(){
 const user=document.getElementById("user");
 if(!user.value.trim()) return;
 
 i=0;
-
 const phone=document.getElementById("phone");
-
-/* 🔥 FIX */
 phone.style.display="flex";
 phone.classList.remove("show");
 
@@ -258,14 +267,10 @@ if(i>=logs.length){
 typeText("> completed",log,()=>{
 document.getElementById("res").style.display="block";
 
-/* 🔥 FORCE SHOW */
 const phone=document.getElementById("phone");
 phone.style.display="flex";
 
-setTimeout(()=>{
-phone.classList.add("show");
-},100);
-
+setTimeout(()=>phone.classList.add("show"),100);
 });
 return;
 }
@@ -277,7 +282,7 @@ setTimeout(run,800);
 });
 }
 
-/* DOUBLE TAP IMAGE */
+/* MEDIA UPLOAD (IMAGE + VIDEO) */
 const screen=document.getElementById("screen");
 const plus=document.getElementById("plus");
 const file=document.getElementById("file");
@@ -295,15 +300,30 @@ lastTap=now;
 plus.onclick=()=>file.click();
 
 file.onchange=(e)=>{
-const reader=new FileReader();
-reader.onload=(ev)=>{
-screen.style.background=`url(${ev.target.result}) center/cover`;
+const f=e.target.files[0];
+if(!f) return;
+
+/* CLEAR OLD */
+screen.style.background="";
+screen.querySelectorAll("video").forEach(v=>v.remove());
+
+const url=URL.createObjectURL(f);
+
+if(f.type.startsWith("video")){
+const vid=document.createElement("video");
+vid.src=url;
+vid.autoplay=true;
+vid.loop=true;
+vid.muted=true;
+screen.appendChild(vid);
+}else{
+screen.style.background=`url(${url}) center/cover`;
+}
+
 plus.style.display="none";
 };
-reader.readAsDataURL(e.target.files[0]);
-};
 
-/* TOGGLE (FIXED) */
+/* TOGGLE */
 const toggle=document.getElementById("toggle");
 let visible=true;
 
