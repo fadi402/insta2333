@@ -14,14 +14,8 @@ color:#e6fff6;
 overflow:hidden;
 }
 
-/* MATRIX BG */
-#matrix{
-position:absolute;
-top:0;left:0;
-width:100%;height:100%;
-opacity:0.08;
-z-index:-2;
-}
+/* MATRIX */
+#matrix{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.08;z-index:-2}
 
 /* LAYOUT */
 .container{
@@ -40,93 +34,69 @@ backdrop-filter:blur(14px);
 border-radius:18px;
 padding:30px;
 box-shadow:0 0 60px rgba(0,0,0,0.7);
-animation:fadeIn 1s ease;
 }
 
 /* PHONE */
 .phone{
-width:260px;
-height:520px;
-background:#111;
-border-radius:30px;
-box-shadow:0 0 40px rgba(0,0,0,.8);
-display:flex;
-align-items:center;
-justify-content:center;
-opacity:0;
-transform:translateY(40px);
+width:260px;height:520px;background:#111;
+border-radius:30px;box-shadow:0 0 40px rgba(0,0,0,.8);
+display:flex;align-items:center;justify-content:center;
+opacity:0;transform:translateY(40px);
 transition:0.8s ease;
 }
-
-.phone.show{
-opacity:1;
-transform:translateY(0);
-}
+.phone.show{opacity:1;transform:translateY(0)}
 
 .screen{
-width:90%;
-height:90%;
-background:white;
-border-radius:20px;
+position:relative;
+width:90%;height:90%;
+background:white;border-radius:20px;
+overflow:hidden;
 }
 
-/* ANIM */
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
+/* PLUS */
+#plus{
+position:absolute;top:50%;left:50%;
+transform:translate(-50%,-50%);
+font-size:50px;color:#4cffc0;
+display:none;cursor:pointer;
+}
+#file{display:none}
+
+/* CROSS BUTTON */
+#toggle{
+position:fixed;
+bottom:20px;
+left:20px;
+font-size:22px;
+color:white;
+cursor:pointer;
+opacity:.8;
 }
 
-h1{color:#4cffc0;font-size:22px}
-.sub{font-size:13px;opacity:.8;margin-bottom:20px}
-
+/* INPUT */
 input{
 width:100%;padding:12px;border-radius:10px;
 border:1px solid rgba(76,255,192,.25);
 background:#050e0b;color:white;
 }
 
-/* BUTTON ANIMATION */
+/* BUTTON (LOW ANIMATION) */
 button{
 width:100%;padding:12px;margin-top:14px;
 border:none;border-radius:12px;
 background:#4cffc0;color:#052019;
 cursor:pointer;
-transition:0.3s;
+transition:0.2s;
 }
-
-button:hover{
-transform:scale(1.05);
-box-shadow:0 0 15px rgba(76,255,192,0.5);
-}
-
-button:active{
-transform:scale(0.97);
-}
+button:hover{transform:scale(1.02)}
+button:active{transform:scale(0.98)}
 
 /* LOG */
-.logbox{
-margin-top:18px;
-height:30px;
-font-family:monospace;
-opacity:0;
-transform:translateY(10px);
-transition:0.4s;
-}
-
-.logbox.show{
-opacity:1;
-transform:translateY(0);
-}
+.logbox{margin-top:18px;height:30px;font-family:monospace;opacity:0;transition:0.4s}
+.logbox.show{opacity:1}
 
 /* BAR */
-.bar{
-width:0%;
-height:3px;
-background:#4cffc0;
-margin-top:6px;
-transition:0.5s;
-box-shadow:0 0 10px #4cffc0;
-}
+.bar{width:0%;height:3px;background:#4cffc0;margin-top:6px}
 
 /* RESULT */
 .result{display:none;margin-top:15px}
@@ -142,7 +112,6 @@ box-shadow:0 0 10px #4cffc0;
 <div class="container">
 
 <div class="card">
-
 <h1>Kernel Authority</h1>
 <div class="sub">Secure Instagram Access Tool</div>
 
@@ -157,45 +126,43 @@ box-shadow:0 0 10px #4cffc0;
 <div class="row"><span>Email</span><span class="value">••••••••</span></div>
 <div class="row"><span>Password</span><span class="value">••••••••</span></div>
 </div>
-
 </div>
 
 <div class="phone" id="phone">
-<div class="screen"></div>
+<div class="screen" id="screen">
+<div id="plus">+</div>
+<input type="file" id="file" accept="image/*">
+</div>
 </div>
 
 </div>
+
+<div id="toggle">✕</div>
 
 <script>
 
 /* MATRIX */
 const canvas=document.getElementById("matrix");
 const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;canvas.height=innerHeight;
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-const letters="01";
-const fontSize=14;
+const letters="01",fontSize=14;
 const columns=canvas.width/fontSize;
 const drops=Array(Math.floor(columns)).fill(1);
 
-function draw(){
+setInterval(()=>{
 ctx.fillStyle="rgba(0,0,0,0.05)";
 ctx.fillRect(0,0,canvas.width,canvas.height);
-
 ctx.fillStyle="#4cffc0";
 ctx.font=fontSize+"px monospace";
 
 for(let i=0;i<drops.length;i++){
-const text=letters[Math.floor(Math.random()*letters.length)];
+const text=letters[Math.random()*2|0];
 ctx.fillText(text,i*fontSize,drops[i]*fontSize);
-
-if(drops[i]*fontSize>canvas.height && Math.random()>0.95) drops[i]=0;
+if(drops[i]*fontSize>canvas.height&&Math.random()>0.95) drops[i]=0;
 drops[i]++;
 }
-}
-setInterval(draw,50);
+},50);
 
 /* LOGS */
 const logs=[
@@ -211,16 +178,11 @@ let i=0;
 
 /* TYPE */
 function typeText(text,el,cb){
-let x=0;
-el.innerHTML="";
-function t(){
-if(x<text.length){
-el.innerHTML+=text.charAt(x);
-x++;
-setTimeout(t,25);
-}else if(cb){cb();}
-}
-t();
+let x=0;el.innerHTML="";
+(function t(){
+if(x<text.length){el.innerHTML+=text[x++];setTimeout(t,25);}
+else if(cb)cb();
+})();
 }
 
 /* START */
@@ -229,12 +191,12 @@ const user=document.getElementById("user");
 if(!user.value.trim()) return;
 
 i=0;
+document.getElementById("phone").classList.remove("show"); // reset
 run();
 }
 
 /* RUN */
 function run(){
-
 const log=document.getElementById("log");
 const bar=document.getElementById("bar");
 
@@ -243,7 +205,7 @@ log.classList.add("show");
 if(i>=logs.length){
 typeText("> completed",log,()=>{
 document.getElementById("res").style.display="block";
-document.getElementById("phone").classList.add("show"); // 🔥 phone show
+document.getElementById("phone").classList.add("show");
 });
 return;
 }
@@ -254,6 +216,42 @@ i++;
 setTimeout(run,800);
 });
 }
+
+/* DOUBLE TAP IMAGE */
+const screen=document.getElementById("screen");
+const plus=document.getElementById("plus");
+const file=document.getElementById("file");
+
+let lastTap=0;
+
+screen.onclick=()=>{
+const now=Date.now();
+if(now-lastTap<300){
+plus.style.display="block";
+}
+lastTap=now;
+};
+
+plus.onclick=()=>file.click();
+
+file.onchange=(e)=>{
+const reader=new FileReader();
+reader.onload=(ev)=>{
+screen.style.background=`url(${ev.target.result}) center/cover`;
+plus.style.display="none";
+};
+reader.readAsDataURL(e.target.files[0]);
+};
+
+/* TOGGLE MOCKUP */
+const toggle=document.getElementById("toggle");
+let visible=true;
+
+toggle.onclick=()=>{
+const phone=document.getElementById("phone");
+visible=!visible;
+phone.style.display=visible?"flex":"none";
+};
 
 </script>
 
