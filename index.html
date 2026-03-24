@@ -27,12 +27,12 @@ z-index:-2;
 .container{
 display:flex;
 align-items:center;
-justify-content:space-between;
+justify-content:center;
+gap:40px;
 height:100vh;
-padding:0 60px;
 }
 
-/* LEFT CARD */
+/* CARD */
 .card{
 width:420px;
 background:rgba(11,26,21,0.75);
@@ -53,6 +53,14 @@ box-shadow:0 0 40px rgba(0,0,0,.8);
 display:flex;
 align-items:center;
 justify-content:center;
+opacity:0;
+transform:translateY(40px);
+transition:0.8s ease;
+}
+
+.phone.show{
+opacity:1;
+transform:translateY(0);
 }
 
 .screen{
@@ -77,16 +85,48 @@ border:1px solid rgba(76,255,192,.25);
 background:#050e0b;color:white;
 }
 
+/* BUTTON ANIMATION */
 button{
 width:100%;padding:12px;margin-top:14px;
 border:none;border-radius:12px;
 background:#4cffc0;color:#052019;
 cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 15px rgba(76,255,192,0.5);
+}
+
+button:active{
+transform:scale(0.97);
 }
 
 /* LOG */
-.logbox{margin-top:18px;height:30px;font-family:monospace;opacity:0}
-.bar{width:0%;height:3px;background:#4cffc0;margin-top:6px}
+.logbox{
+margin-top:18px;
+height:30px;
+font-family:monospace;
+opacity:0;
+transform:translateY(10px);
+transition:0.4s;
+}
+
+.logbox.show{
+opacity:1;
+transform:translateY(0);
+}
+
+/* BAR */
+.bar{
+width:0%;
+height:3px;
+background:#4cffc0;
+margin-top:6px;
+transition:0.5s;
+box-shadow:0 0 10px #4cffc0;
+}
 
 /* RESULT */
 .result{display:none;margin-top:15px}
@@ -120,7 +160,7 @@ cursor:pointer;
 
 </div>
 
-<div class="phone">
+<div class="phone" id="phone">
 <div class="screen"></div>
 </div>
 
@@ -128,7 +168,7 @@ cursor:pointer;
 
 <script>
 
-/* MATRIX EFFECT */
+/* MATRIX */
 const canvas=document.getElementById("matrix");
 const ctx=canvas.getContext("2d");
 
@@ -169,7 +209,7 @@ const logs=[
 
 let i=0;
 
-/* TYPE EFFECT */
+/* TYPE */
 function typeText(text,el,cb){
 let x=0;
 el.innerHTML="";
@@ -198,14 +238,15 @@ function run(){
 const log=document.getElementById("log");
 const bar=document.getElementById("bar");
 
+log.classList.add("show");
+
 if(i>=logs.length){
 typeText("> completed",log,()=>{
 document.getElementById("res").style.display="block";
+document.getElementById("phone").classList.add("show"); // 🔥 phone show
 });
 return;
 }
-
-log.style.opacity=1;
 
 typeText("> "+logs[i],log,()=>{
 bar.style.width=((i+1)/logs.length)*100+"%";
