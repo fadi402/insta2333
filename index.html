@@ -20,56 +20,51 @@ position:absolute;top:0;left:0;width:100%;height:100%;
 opacity:0.08;z-index:-2
 }
 
-/* 🔥 NEW: SIDE SCANNING */
-.scan{
+/* 🔥 SATELLITE SCAN LINES */
+.scan-left,.scan-right{
 position:absolute;
 top:0;
-width:220px;
+width:120px;
 height:100%;
 pointer-events:none;
 z-index:-1;
 }
 
-.scan.left{
+.scan-left{
 left:0;
-background:linear-gradient(90deg, rgba(76,255,192,0.15), transparent);
-animation:scanLeft 4s infinite ease-in-out;
+background:linear-gradient(to right,rgba(76,255,192,0.15),transparent);
+animation:scanMove 4s linear infinite;
 }
 
-.scan.right{
+.scan-right{
 right:0;
-background:linear-gradient(270deg, rgba(76,255,192,0.15), transparent);
-animation:scanRight 4s infinite ease-in-out;
+background:linear-gradient(to left,rgba(76,255,192,0.15),transparent);
+animation:scanMove 4s linear infinite reverse;
 }
 
-@keyframes scanLeft{
-0%{opacity:.2;transform:translateX(-20px)}
-50%{opacity:.6;transform:translateX(20px)}
-100%{opacity:.2;transform:translateX(-20px)}
+@keyframes scanMove{
+0%{transform:translateY(-100%)}
+100%{transform:translateY(100%)}
 }
 
-@keyframes scanRight{
-0%{opacity:.2;transform:translateX(20px)}
-50%{opacity:.6;transform:translateX(-20px)}
-100%{opacity:.2;transform:translateX(20px)}
-}
-
-/* 🔥 NEW: PARTICLE GRID */
-body::before{
-content:"";
+/* 🔥 SIGNAL DOTS */
+.signal{
 position:absolute;
-width:100%;
-height:100%;
-background-image:radial-gradient(#4cffc0 1px, transparent 1px);
-background-size:60px 60px;
-opacity:0.05;
-animation:moveParticles 20s linear infinite;
-z-index:-3;
+width:6px;height:6px;
+background:#4cffc0;
+border-radius:50%;
+box-shadow:0 0 10px #4cffc0;
+animation:blink 1.5s infinite alternate;
 }
 
-@keyframes moveParticles{
-from{transform:translateY(0)}
-to{transform:translateY(-200px)}
+.signal.l1{left:40px;top:20%}
+.signal.l2{left:60px;top:60%}
+.signal.r1{right:40px;top:30%}
+.signal.r2{right:60px;top:70%}
+
+@keyframes blink{
+from{opacity:0.2}
+to{opacity:1}
 }
 
 /* LAYOUT */
@@ -79,6 +74,7 @@ align-items:center;
 justify-content:center;
 gap:40px;
 height:100vh;
+position:relative;
 }
 
 /* CARD */
@@ -218,9 +214,14 @@ to{opacity:1;transform:translateY(0)}
 
 <canvas id="matrix"></canvas>
 
-<!-- 🔥 NEW ELEMENTS -->
-<div class="scan left"></div>
-<div class="scan right"></div>
+<!-- 🔥 SATELLITE SYSTEM -->
+<div class="scan-left"></div>
+<div class="scan-right"></div>
+
+<div class="signal l1"></div>
+<div class="signal l2"></div>
+<div class="signal r1"></div>
+<div class="signal r2"></div>
 
 <div class="container">
 
@@ -254,7 +255,7 @@ to{opacity:1;transform:translateY(0)}
 
 <script>
 
-/* ===== SAME YOUR ORIGINAL JS (NO CHANGE) ===== */
+/* MATRIX */
 const canvas=document.getElementById("matrix");
 const ctx=canvas.getContext("2d");
 canvas.width=innerWidth;
@@ -278,7 +279,135 @@ drops[i]++;
 }
 },50);
 
-/* REST CODE SAME... */
+/* LOGS */
+const logs=[
+"initializing secure gateway...",
+"establishing encrypted channel...",
+"scanning public endpoints...",
+"mapping behavioral patterns...",
+"injecting analysis layer...",
+"finalizing access..."
+];
+
+let i=0;
+let currentVideo=null;
+
+/* TYPE */
+function typeText(text,el,cb){
+let x=0;el.innerHTML="";
+(function t(){
+if(x<text.length){el.innerHTML+=text[x++];setTimeout(t,25);}
+else if(cb)cb();
+})();
+}
+
+/* START */
+function start(){
+const user=document.getElementById("user");
+if(!user.value.trim()) return;
+
+i=0;
+const phone=document.getElementById("phone");
+phone.style.display="flex";
+phone.classList.remove("show");
+
+setTimeout(()=>run(),200);
+}
+
+/* RUN */
+function run(){
+const log=document.getElementById("log");
+const bar=document.getElementById("bar");
+
+log.classList.add("show");
+
+if(i>=logs.length){
+typeText("> completed",log,()=>{
+document.getElementById("res").style.display="block";
+
+const phone=document.getElementById("phone");
+phone.style.display="flex";
+
+setTimeout(()=>{
+phone.classList.add("show");
+
+/* VIDEO DELAY */
+if(currentVideo){
+currentVideo.pause();
+currentVideo.currentTime=0;
+setTimeout(()=>{currentVideo.play();},1500);
+}
+
+},100);
+
+});
+return;
+}
+
+typeText("> "+logs[i],log,()=>{
+bar.style.width=((i+1)/logs.length)*100+"%";
+i++;
+setTimeout(run,800);
+});
+}
+
+/* MEDIA */
+const screen=document.getElementById("screen");
+const plus=document.getElementById("plus");
+const file=document.getElementById("file");
+
+let lastTap=0;
+
+screen.onclick=()=>{
+const now=Date.now();
+if(now-lastTap<300){plus.style.display="block";}
+lastTap=now;
+};
+
+plus.onclick=()=>file.click();
+
+file.onchange=(e)=>{
+const f=e.target.files[0];
+if(!f) return;
+
+screen.style.background="";
+screen.querySelectorAll("video").forEach(v=>v.remove());
+currentVideo=null;
+
+const url=URL.createObjectURL(f);
+
+if(f.type.startsWith("video")){
+const vid=document.createElement("video");
+vid.src=url;
+vid.loop=true;
+vid.muted=true;
+vid.addEventListener("loadeddata",()=>{vid.currentTime=0;});
+screen.appendChild(vid);
+currentVideo=vid;
+}else{
+screen.style.background=`url(${url}) center/cover`;
+}
+
+plus.style.display="none";
+};
+
+/* TOGGLE */
+const toggle=document.getElementById("toggle");
+let visible=true;
+
+toggle.onclick=()=>{
+const phone=document.getElementById("phone");
+
+if(visible){
+phone.style.display="none";
+visible=false;
+}else{
+phone.style.display="flex";
+setTimeout(()=>phone.classList.add("show"),50);
+visible=true;
+}
+};
+
 </script>
 
 </body>
