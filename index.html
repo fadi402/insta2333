@@ -20,75 +20,57 @@ position:absolute;top:0;left:0;width:100%;height:100%;
 opacity:0.08;z-index:-2
 }
 
-/* 🔥 SIDE SYSTEMS */
-.side{
+/* 🔥 ENTERPRISE SIDE EFFECTS */
+.side-panel{
 position:absolute;
 top:0;
-width:120px;
+width:80px;
 height:100%;
 pointer-events:none;
-color:#4cffc0;
-font-family:monospace;
-font-size:10px;
-opacity:0.6;
+z-index:-1;
+display:flex;
+flex-direction:column;
+justify-content:space-around;
+padding:20px 0;
 }
 
-.left{left:0}
-.right{right:0}
+.side-left{left:0;}
+.side-right{right:0;}
 
-/* DATA STREAM */
-.stream{
+.side-line{
+width:4px;
+height:20%;
+margin:10px auto;
+background:linear-gradient(#4cffc0,#052019);
+opacity:0.5;
+animation:linePulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes linePulse{
+0%{opacity:0.3;transform:scaleY(0.9);}
+50%{opacity:1;transform:scaleY(1.1);}
+100%{opacity:0.3;transform:scaleY(0.9);}
+}
+
+/* SIGNAL DOTS */
+.signal{
 position:absolute;
-width:100%;
-animation:scroll 6s linear infinite;
-}
-@keyframes scroll{
-0%{transform:translateY(100%)}
-100%{transform:translateY(-100%)}
-}
-
-/* RADAR BARS */
-.barline{
-width:80%;
-height:2px;
+width:6px;height:6px;
 background:#4cffc0;
-margin:6px auto;
-opacity:0.3;
-animation:pulse 1.5s infinite;
-}
-@keyframes pulse{
-0%{opacity:0.1}
-50%{opacity:1}
-100%{opacity:0.1}
-}
-
-/* SIGNAL RINGS */
-.ring{
-position:absolute;
-width:60px;height:60px;
-border:1px solid #4cffc0;
 border-radius:50%;
-opacity:0;
-animation:ringPulse 3s infinite;
-}
-@keyframes ringPulse{
-0%{transform:scale(0.5);opacity:0.6}
-100%{transform:scale(2);opacity:0}
+box-shadow:0 0 12px #4cffc0;
+animation:blink 1.5s infinite alternate;
 }
 
-.r1{top:20%;left:20px}
-.r2{bottom:20%;right:20px}
+.signal.l1{left:30px;top:15%}
+.signal.l2{left:50px;top:50%}
+.signal.l3{left:30px;top:75%}
+.signal.r1{right:30px;top:20%}
+.signal.r2{right:50px;top:55%}
+.signal.r3{right:30px;top:80%}
 
-/* LIVE NUMBERS */
-.numbers{
-position:absolute;
-bottom:10%;
-width:100%;
-text-align:center;
-animation:blink 1s infinite alternate;
-}
 @keyframes blink{
-from{opacity:0.3}
+from{opacity:0.2}
 to{opacity:1}
 }
 
@@ -239,27 +221,26 @@ to{opacity:1;transform:translateY(0)}
 
 <canvas id="matrix"></canvas>
 
-<!-- 🔥 LEFT SYSTEM -->
-<div class="side left">
-<div class="stream">
-SYS_INIT_01<br>AUTH_NET<br>SCAN_NODE<br>TRACE_IP<br>LINK_EST<br>
-</div>
-<div class="barline"></div>
-<div class="barline"></div>
-<div class="ring r1"></div>
-<div class="numbers">8941 • 2231 • 9912</div>
+<!-- ENTERPRISE SIDE PANELS -->
+<div class="side-panel side-left">
+<div class="side-line"></div>
+<div class="side-line"></div>
+<div class="side-line"></div>
 </div>
 
-<!-- 🔥 RIGHT SYSTEM -->
-<div class="side right">
-<div class="stream">
-DATA_RX<br>ENCRYPT_OK<br>PORT_SCAN<br>LIVE_FEED<br>ACCESS_OK<br>
+<div class="side-panel side-right">
+<div class="side-line"></div>
+<div class="side-line"></div>
+<div class="side-line"></div>
 </div>
-<div class="barline"></div>
-<div class="barline"></div>
-<div class="ring r2"></div>
-<div class="numbers">1102 • 7783 • 5521</div>
-</div>
+
+<!-- SIGNAL DOTS -->
+<div class="signal l1"></div>
+<div class="signal l2"></div>
+<div class="signal l3"></div>
+<div class="signal r1"></div>
+<div class="signal r2"></div>
+<div class="signal r3"></div>
 
 <div class="container">
 
@@ -369,6 +350,7 @@ phone.style.display="flex";
 setTimeout(()=>{
 phone.classList.add("show");
 
+/* VIDEO DELAY */
 if(currentVideo){
 currentVideo.pause();
 currentVideo.currentTime=0;
